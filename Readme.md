@@ -1,6 +1,6 @@
 # Split structs
 
-> This script help you to split onde nested struct into multiple structs
+> This script help you to split nested struct into multiple structs
 
 ## How to use
 
