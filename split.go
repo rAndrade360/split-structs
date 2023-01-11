@@ -59,8 +59,14 @@ func SplitStructs(b []byte) []byte {
 					b.name = t + st[idx].name
 				}
 
-				b.buf.WriteString(fmt.Sprintf("type %s %s\n ", b.name, strings.TrimSpace(strings.Join(ts[1:], " "))))
-				st[idx].buf.WriteString(t + " " + b.name)
+				b.buf.WriteString(fmt.Sprintf("type %s %s\n ", b.name, " struct {"))
+
+				sep := " "
+				if strings.Contains(txt, "[]struct") {
+					sep += "[]"
+				}
+
+				st[idx].buf.WriteString(t + sep + b.name)
 				st = append(st, b)
 				idx = len(st) - 1
 				continue
