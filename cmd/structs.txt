@@ -3,4 +3,7 @@ type Foo struct {
 	Bar struct {
 		AnotherFiled string
 	}
+	Line []struct{
+		LineField int64
+	}
 }

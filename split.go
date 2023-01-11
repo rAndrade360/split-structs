@@ -3,6 +3,7 @@ package split
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"go/format"
 	"log"
 	"strings"
@@ -51,13 +52,14 @@ func SplitStructs(b []byte) []byte {
 					link: idx,
 				}
 
-				t := strings.TrimSpace(strings.Split(txt, " ")[0])
+				ts := strings.Split(txt, " ")
+				t := strings.TrimSpace(ts[0])
 				b.name = t
 				if alreadyExistsName(t, st) {
 					b.name = t + st[idx].name
 				}
 
-				b.buf.WriteString("type " + b.name + " struct {" + "\n")
+				b.buf.WriteString(fmt.Sprintf("type %s %s\n ", b.name, strings.TrimSpace(strings.Join(ts[1:], " "))))
 				st[idx].buf.WriteString(t + " " + b.name)
 				st = append(st, b)
 				idx = len(st) - 1
