@@ -32,8 +32,6 @@ func main() {
 
 	f.Write(splstc.SplitStructs(b))
 
-	runFmt()
-
 }
 
 func runFmt() {
