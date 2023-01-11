@@ -18,6 +18,7 @@ func main() {
 	if err != nil {
 		log.Println("Err to open file: ", err.Error())
 	}
+	defer file.Close()
 
 	b, err := io.ReadAll(file)
 	if err != nil {
@@ -31,6 +32,7 @@ func main() {
 	}
 
 	f.Write(splstc.SplitStructs(b))
+	f.Close()
 
 }
 
