@@ -13,9 +13,7 @@ func init() {
 	runFmt()
 }
 
-// var temp = template.Must(template.ParseGlob("../templates/*.html"))
-
-func splitStructsOnly() {
+func main() {
 	file, err := os.Open("./tmp.go")
 	if err != nil {
 		log.Println("Err to open file: ", err.Error())
@@ -32,16 +30,11 @@ func splitStructsOnly() {
 		log.Println("Err to open file: ", err.Error())
 
 	}
+
 	spltStructs := splstc.SplitStructs(b)
-
-	log.Printf("data: %v", string(spltStructs))
-
+	log.Print("\nSplitting structs...\n")
 	f.Write(spltStructs)
 	f.Close()
-}
-
-func main() {
-	// splitStructsOnly()
 }
 
 func runFmt() {
