@@ -4,44 +4,35 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os/exec"
 
 	splstc "github.com/rAndrade360/split-structs"
 )
 
+const serverPort = "8000"
+
 func main() {
+	log.Printf("\nserver is running in %s port\n", serverPort)
 	http.HandleFunc("/", tmplServer)
-	http.ListenAndServe(":8000", nil)
+	log.Fatal(http.ListenAndServe(":"+serverPort, nil))
 }
 
 func tmplServer(rw http.ResponseWriter, req *http.Request) {
-	cmd := exec.Command("cat", "../../structs.txt")
-	b, err := cmd.Output()
-	if err != nil {
-		log.Println("Err to run cmd ", err.Error())
+	if err := req.ParseForm(); err != nil {
+		log.Fatalf("error: %s", err.Error())
 	}
 
-	spltStructs := splstc.SplitStructs(b)
+	b := req.PostForm.Get("str_to_splt")
+	spltStructs := splstc.SplitStructs([]byte(b))
 
 	data := struct {
-		Title        string
-		SplitStructs string
+		Title           string
+		ReceivedStructs string
+		SplitStructs    string
 	}{
-		Title:        "Split structs",
-		SplitStructs: string(spltStructs),
+		Title:           "Split structs",
+		ReceivedStructs: b,
+		SplitStructs:    string(spltStructs),
 	}
-
-	const tpl = `
-		<!DOCTYPE html>
-		<html>
-			<head>
-					<meta charset="UTF-8">
-				<title>{{.Title}}</title>
-			</head>
-			<body>
-				<div>{{.SplitStructs}}</div>
-			</body>
-		</html>`
 
 	t, err := template.New("webpage").Parse(tpl)
 	if err != nil {
@@ -53,3 +44,29 @@ func tmplServer(rw http.ResponseWriter, req *http.Request) {
 		log.Fatalf("error: %s", err.Error())
 	}
 }
+
+const tpl = `
+		<!DOCTYPE html>
+		<html>
+			<head>
+					<meta charset="UTF-8">
+				<title>{{.Title}}</title>
+			</head>
+			<body>
+				<h1> Split structs </h1>
+				<div style="display: flex; margin-left: 7%; margin-top: 4%">
+					<p style="margin-left: 9%">Type here your struct:</p>
+					<p style="margin-left: 25%">Result:</p>
+				</div>
+				<div style="display: flex; margin-left: 7%;">
+					<br>
+					<form method="POST" style="display: flex;">
+						<div><textarea name="str_to_splt" cols="20" rows="10" style="height: 529px; width: 405px;">{{.ReceivedStructs}}</textarea></div>
+						<div><input type="submit" value="Split" style="margin-left: 68px; margin-top: 130px;"></div>
+					</form>
+					<br>
+					<textarea cols="20" rows="10" style="height: 529px; width: 405px; margin-left: 4%">{{.SplitStructs}}</textarea>
+				</div>
+			
+			</body>
+		</html>`
