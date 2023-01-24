@@ -31,9 +31,10 @@ func main() {
 
 	}
 
-	f.Write(splstc.SplitStructs(b))
+	spltStructs := splstc.SplitStructs(b)
+	log.Print("\nSplitting structs...\n")
+	f.Write(spltStructs)
 	f.Close()
-
 }
 
 func runFmt() {

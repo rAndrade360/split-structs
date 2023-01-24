@@ -1,0 +1,11 @@
+package main
+
+type Foo struct {
+	AnyField string
+	Bar      struct {
+		AnotherFiled string
+	}
+	Line []struct {
+		LineField int64
+	}
+}
