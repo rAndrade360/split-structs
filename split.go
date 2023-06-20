@@ -1,11 +1,11 @@
-package split
+package main
 
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"go/format"
-	"log"
 	"strings"
 )
 
@@ -25,7 +25,7 @@ func alreadyExistsName(n string, s []cbuff) bool {
 	return false
 }
 
-func SplitStructs(b []byte) []byte {
+func SplitStructs(b []byte) ([]byte, error) {
 	st := make([]cbuff, 1)
 	idx := 0
 	var err error
@@ -33,7 +33,7 @@ func SplitStructs(b []byte) []byte {
 	for {
 		advance, token, err := bufio.ScanLines(b, true)
 		if err != nil {
-			log.Fatal("Err to scan: ", err.Error())
+			return nil, errors.New("error to read lines")
 		}
 
 		if advance == 0 {
@@ -45,9 +45,8 @@ func SplitStructs(b []byte) []byte {
 		}
 
 		txt := string(token)
-		if strings.Contains(txt, "struct {") {
+		if strings.Contains(txt, "struct {") || strings.Contains(txt, "struct{") {
 			if !strings.Contains(txt, "type ") {
-
 				b := cbuff{
 					link: idx,
 				}
@@ -99,7 +98,8 @@ func SplitStructs(b []byte) []byte {
 
 	d, err = format.Source(d)
 	if err != nil {
-		log.Fatal("Err to format: ", err.Error())
+		return nil, fmt.Errorf("error to fomart source: %s", err.Error())
 	}
-	return d
+
+	return d, err
 }
