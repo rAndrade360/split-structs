@@ -14,7 +14,7 @@ func init() {
 }
 
 func main() {
-	file, err := os.Open("./tmp.go")
+	file, err := os.Open("./tmp.txt")
 	if err != nil {
 		log.Println("Err to open file: ", err.Error())
 	}
@@ -31,7 +31,7 @@ func main() {
 
 	}
 
-	spltStructs := splstc.SplitStructs(b)
+	spltStructs, _ := splstc.SplitStructs(b)
 	log.Print("\nSplitting structs...\n")
 	f.Write(spltStructs)
 	f.Close()

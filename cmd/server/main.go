@@ -22,7 +22,10 @@ func tmplServer(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	b := req.PostForm.Get("str_to_splt")
-	spltStructs := splstc.SplitStructs([]byte(b))
+	spltStructs, err := splstc.SplitStructs([]byte(b))
+	if err != nil {
+		log.Fatalf("error: %s", err.Error())
+	}
 
 	data := struct {
 		Title           string
